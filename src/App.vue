@@ -7,6 +7,20 @@
           <icon icon="search" class="search-icon"/>
         </div>
       </div>
+      <div class="content-box">
+        <div class="content">
+          <div class="info">
+            Bucaramanga - Colombia
+          </div>
+          <div class="temp">
+            35°C
+          </div>
+          <div class="status">
+            <span>{{ statusText }}</span>
+            <icon :icon="statusIcon"/>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -17,6 +31,12 @@ export default {
   computed: {
     className () {
       return ['app', 'rain']
+    },
+    statusIcon () {
+      return 'cloud-showers-heavy'
+    },
+    statusText () {
+      return 'Nublado'
     }
   }
 }
@@ -51,12 +71,18 @@ body {
 
 .app.rain {
   background-image: url('assets/rainy_day.jpg');
+  .status {
+    color: rgb(94, 19, 233);
+  }
 }
 
 .content {
   width: 100%;
   height: 100%;
   background-color: rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .search-box {
@@ -96,6 +122,38 @@ body {
   color: rgba(0, 0, 0,0.8);
   top: 5px;
   right: 5px;
+}
+
+.content-box {
+  height: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .content {
+    padding: 25px;
+    height: fit-content;
+    background: rgba(252, 252, 252,0.5);
+    border-radius: 15px;
+  }
+
+  .info {
+    font-size: 18px;
+  }
+
+  .temp {
+    font-size: 40px;
+    font-weight: 600;
+  }
+
+  .status {
+    width: inherit;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+    gap: 15px;
+    color: rgb(224, 78, 11);
+  }
+
 }
 
 @media (min-width: 600px) {
