@@ -3,17 +3,17 @@
     <div class="content">
       <div class="search-box">
         <div class="search-content">
-          <input type="text" class="search">
+          <input type="text" class="search" v-model="query" @keydown.enter="fetchData">
           <icon icon="search" class="search-icon"/>
         </div>
       </div>
       <div class="content-box">
-        <div class="content">
+        <div class="content" v-if="temp">
           <div class="info">
-            Bucaramanga - Colombia
+            {{ info }}
           </div>
           <div class="temp">
-            35°C
+            {{temp}}°C
           </div>
           <div class="status">
             <span>{{ statusText }}</span>
@@ -24,19 +24,50 @@
     </div>
   </div>
 </template>
-
 <script>
+const api = {
+  key: '21aae74e95baf4bc447df1b43da5af82',
+  url: 'https://api.openweathermap.org/data/2.5/weather'
+}
 export default {
   name: 'App',
   computed: {
     className () {
-      return ['app', 'rain']
+      return this.temp >= 25 ? ['app'] : ['app', 'rain']
+    },
+    temp () {
+      return Math.round(this.weatherData?.main?.temp)
     },
     statusIcon () {
-      return 'cloud-showers-heavy'
+      return this.temp >= 25 ? 'sun' : 'cloud-showers-heavy'
     },
     statusText () {
-      return 'Nublado'
+      return this.temp >= 25 ? 'Soleado' : 'Nublado'
+    },
+    info () {
+      return `${this.lastQuery} - ${this.weatherData?.sys?.country}`
+    }
+  },
+  data () {
+    return {
+      query: '',
+      weatherData: {},
+      lastQuery: ''
+    }
+  },
+  methods: {
+    async fetchData () {
+      if (this.query) {
+        try {
+          const result = await fetch(`${api.url}?q=${this.query}&appid=${api.key}&units=metric`)
+            .then(res => res.json())
+          this.weatherData = result
+          this.lastQuery = this.query
+          this.query = ''
+        } catch (error) {
+          console.log(error)
+        }
+      }
     }
   }
 }
